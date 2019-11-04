@@ -1,0 +1,91 @@
+https://www.movable-type.co.uk/scripts/latlong.html
+
+Distance
+This uses the ‘haversine’ formula to calculate the great-circle distance between two points – that is, the shortest distance over the earth’s surface – giving an ‘as-the-crow-flies’ distance between the points (ignoring any hills they fly over, of course!).
+
+Haversine
+formula:	a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+c = 2 ⋅ atan2( √a, √(1−a) )
+d = R ⋅ c
+where	φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
+note that angles need to be in radians to pass to trig functions!
+JavaScript:
+var R = 6371e3; // metres
+var φ1 = lat1.toRadians();
+var φ2 = lat2.toRadians();
+var Δφ = (lat2-lat1).toRadians();
+var Δλ = (lon2-lon1).toRadians();
+
+var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+var d = R * c;
+Note in these scripts, I generally use lat/lon for lati­tude/longi­tude in degrees, and φ/λ for lati­tude/longi­tude in radians – having found that mixing degrees & radians is often the easiest route to head-scratching bugs...
+
+Historical aside: The height of tech­nology for navigator’s calculations used to be log tables. As there is no (real) log of a negative number, the ‘versine’ enabled them to keep trig func­tions in positive numbers. Also, the sin²(θ/2) form of the haversine avoided addition (which en­tailed an anti-log lookup, the addi­tion, and a log lookup). Printed tables for the haver­sine/in­verse-haver­sine (and its log­arithm, to aid multip­lica­tions) saved navi­gators from squaring sines, com­puting square roots, etc – arduous and error-prone activ­ities.
+
+The haversine formula1 ‘remains particularly well-conditioned for numerical computa­tion even at small distances’ – unlike calcula­tions based on the spherical law of cosines. The ‘(re)versed sine’ is 1−cosθ, and the ‘half-versed-sine’ is (1−cosθ)/2 or sin²(θ/2) as used above. Once widely used by navigators, it was described by Roger Sinnott in Sky & Telescope magazine in 1984 (“Virtues of the Haversine”): Sinnott explained that the angular separa­tion between Mizar and Alcor in Ursa Major – 0°11′49.69″ – could be accurately calculated on a TRS-80 using the haversine.
+
+For the curious, c is the angular distance in radians, and a is the square of half the chord length between the points.
+
+If atan2 is not available, c could be calculated from 2 ⋅ asin( min(1, √a) ) (including protec­tion against rounding errors).
+
+Using Chrome on a middling Core i5 PC, a distance calcula­tion takes around 2 – 5 micro­seconds (hence around 200,000 – 500,000 per second). Little to no benefit is obtained by factoring out common terms; probably the JIT compiler optimises them out.
+
+Spherical Law of Cosines
+In fact, JavaScript (and most modern computers & languages) use ‘IEEE 754’ 64-bit floating-point numbers, which provide 15 significant figures of precision. By my estimate, with this precision, the simple spherical law of cosines formula (cos c = cos a cos b + sin a sin b cos C) gives well-condi­tioned results down to distances as small as a few metres on the earth’s surface. (Note that the geodetic form of the law of cosines is rearranged from the canonical one so that the latitude can be used directly, rather than the colatitude).
+
+This makes the simpler law of cosines a reasonable 1-line alternative to the haversine formula for many geodesy purposes (if not for astronomy). The choice may be driven by programming language, processor, coding context, available trig func­tions (in different languages), etc – and, for very small distances an equirectangular approxima­tion may be more suitable.
+
+Law of cosines:	d = acos( sin φ1 ⋅ sin φ2 + cos φ1 ⋅ cos φ2 ⋅ cos Δλ ) ⋅ R
+JavaScript:
+var φ1 = lat1.toRadians(), φ2 = lat2.toRadians(), Δλ = (lon2-lon1).toRadians(), R = 6371e3; // gives d in metres
+var d = Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * R;
+Excel:	=ACOS( SIN(lat1)*SIN(lat2) + COS(lat1)*COS(lat2)*COS(lon2-lon1) ) * 6371000
+(or with lat/lon in degrees):	=ACOS( SIN(lat1*PI()/180)*SIN(lat2*PI()/180) + COS(lat1*PI()/180)*COS(lat2*PI()/180)*COS(lon2*PI()/180-lon1*PI()/180) ) * 6371000
+While simpler, the law of cosines is slightly slower than the haversine, in my tests.
+
+Equirectangular approximation
+If performance is an issue and accuracy less important, for small distances Pythagoras’ theorem can be used on an equi­rectangular projec­tion:*
+
+Formula	x = Δλ ⋅ cos φm
+y = Δφ
+d = R ⋅ √x² + y²
+JavaScript:
+var x = (λ2-λ1) * Math.cos((φ1+φ2)/2);
+var y = (φ2-φ1);
+var d = Math.sqrt(x*x + y*y) * R;
+This uses just one trig and one sqrt function – as against half-a-dozen trig func­tions for cos law, and 7 trigs + 2 sqrts for haversine. Accuracy is somewhat complex: along meridians there are no errors, otherwise they depend on distance, bearing, and latitude, but are small enough for many purposes* (and often trivial compared with the spherical approxima­tion itself).
+
+Alternatively, the polar coordinate flat-earth formula can be used: using the co-latitudes θ1 = π/2−φ1 and θ2 = π/2−φ2, then d = R ⋅ √θ1² + θ2² − 2 ⋅ θ1 ⋅ θ2 ⋅ cos Δλ. I’ve not compared accuracy.
+
+Baghdad to Osaka
+Baghdad to Osaka –
+not a constant bearing!
+Bearing
+In general, your current heading will vary as you follow a great circle path (orthodrome); the final heading will differ from the initial heading by varying degrees according to distance and latitude (if you were to go from say 35°N,45°E (≈ Baghdad) to 35°N,135°E (≈ Osaka), you would start on a heading of 60° and end up on a heading of 120°!).
+
+This formula is for the initial bearing (sometimes referred to as forward azimuth) which if followed in a straight line along a great-circle arc will take you from the start point to the end point:1
+
+Formula:	θ = atan2( sin Δλ ⋅ cos φ2 , cos φ1 ⋅ sin φ2 − sin φ1 ⋅ cos φ2 ⋅ cos Δλ )
+where	φ1,λ1 is the start point, φ2,λ2 the end point (Δλ is the difference in longitude)
+JavaScript:
+(all angles
+in radians)
+var y = Math.sin(λ2-λ1) * Math.cos(φ2);
+var x = Math.cos(φ1)*Math.sin(φ2) -
+        Math.sin(φ1)*Math.cos(φ2)*Math.cos(λ2-λ1);
+var brng = Math.atan2(y, x).toDegrees();
+Excel:
+(all angles
+in radians)
+=ATAN2(COS(lat1)*SIN(lat2)-SIN(lat1)*COS(lat2)*COS(lon2-lon1),
+       SIN(lon2-lon1)*COS(lat2))
+*note that Excel reverses the arguments to ATAN2 – see notes below
+Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo.
+
+For final bearing, simply take the initial bearing from the end point to the start point and reverse it (using θ = (θ+180) % 360).
+
+Midpoint

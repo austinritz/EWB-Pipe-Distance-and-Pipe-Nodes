@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<!DOCTYPE metadata SYSTEM "http://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>U.S. Geological Survey</origin>
+        <pubdate>20181025</pubdate>
+        <title>USGS NED Original Product Resolution PR PuertoRico 2015 19QHV40502100 IMG 2018</title>
+        <geoform>raster digital data</geoform>
+        <pubinfo>
+          <pubplace>Reston, VA</pubplace>
+          <publish>U.S. Geological Survey</publish>
+        </pubinfo>
+        <onlink>http://nationalmap.gov/elevation.html</onlink>
+        <onlink>http://nationalmap.gov/viewer.html</onlink>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This is the Original Product Resolution (OPR) Digital Elevation Model (DEM) as provided to the USGS. This DEM is delivered in the original resolution, with the original spatial reference. These data may be used as the source of updates to the seamless layers of the 3D Elevation Program, which serves as the elevation layer of the National Map. These data can be used by scientists and resource managers for global change research, hydrologic modeling, resource monitoring, mapping and visualization, and many other applications.</abstract>
+      <purpose>3DEP products serve as the elevation layer of The National Map, and provides basic elevation information for earth science studies and mapping applications in the United States. The data are utilized by the scientific and resource management communities for global change research, hydrologic modeling, resource monitoring, mapping and visualization applications.</purpose>
+      <supplinf>This is an original source resolution DEM. The geographic area of coverage is described below in the Bounding Coordinates. Additional information for the 3DEP Products may be found on http://nationalmap.gov/elevation.html. Data may be downloaded through The National Map Viewer: http://nationalmap.gov/viewer.html. Direct links for direct access by automated services are provided in the Distribution section of this metadata.</supplinf>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>20160126</begdate>
+          <enddate>20170316</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>As needed</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-66.0508661035974</westbc>
+        <eastbc>-66.0366700097092</eastbc>
+        <northbc>18.0362389634251</northbc>
+        <southbc>18.0226576707042</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>ISO 19115 Topic Category</themekt>
+        <themekey>elevation</themekey>
+      </theme>
+      <theme>
+        <themekt>NGDA Portfolio Themes</themekt>
+        <themekey>Elevation</themekey>
+      </theme>
+      <theme>
+        <themekt>3D Elevation Program (3DEP)</themekt>
+        <themekey>3D Elevation Program</themekey>
+        <themekey>3DEP</themekey>
+        <themekey>National Elevation Dataset</themekey>
+        <themekey>NED</themekey>
+        <themekey>Elevation</themekey>
+        <themekey>Light Detection and Ranging</themekey>
+        <themekey>LIDAR</themekey>
+        <themekey>High Resolution</themekey>
+        <themekey>Topographic Surface</themekey>
+        <themekey>Topography</themekey>
+        <themekey>Bare Earth</themekey>
+        <themekey>Hydro-Flattened</themekey>
+        <themekey>Terrain Elevation</themekey>
+        <themekey>Cartography</themekey>
+        <themekey>DEM</themekey>
+        <themekey>Digital Elevation Model</themekey>
+        <themekey>Digital Mapping</themekey>
+        <themekey>Digital Terrain Model</themekey>
+        <themekey>Geodata</themekey>
+        <themekey>GIS</themekey>
+        <themekey>Mapping</themekey>
+        <themekey>Raster</themekey>
+        <themekey>USGS</themekey>
+        <themekey>U.S. Geological Survey</themekey>
+      </theme>
+      <place>
+        <placekt>Geographic Names Information System</placekt>
+        <placekey>US</placekey>
+        <placekey>United States</placekey>
+      </place>
+    </keywords>
+    <accconst>None. Any downloading and use of these data signifies a user's agreement to comprehension and compliance of the USGS Standard Disclaimer. Insure all portions of metadata are read and clearly understood before using these data in order to protect both user and USGS interests.</accconst>
+    <useconst>There is no guarantee or warranty concerning the accuracy of the data. Users should be aware that temporal changes may have occurred since these data were collected and that some parts of these data may no longer represent actual surface conditions. Users should not use these data for critical applications without a full awareness of its limitations. Acknowledgement of the originating agencies would be appreciated in products derived from these data. Any user who modifies the data is obligated to describe the types of modifications they perform. User specifically agrees not to misrepresent the data, nor to imply that changes made were approved or endorsed by the USGS. Please refer to http://www.usgs.gov/privacy.html for the USGS disclaimer.</useconst>
+    <browse>
+      <browsen>ftp://rockyftp.cr.usgs.gov/vdelivery/Datasets/Staged/Elevation/OPR/PR_PuertoRico_2015/browse/USGS_NED_OPR_PR_PuertoRico_2015_19QHV40502100_IMG_2018_thumb.jpg</browsen>
+      <browsed>Thumbnail JPG image</browsed>
+      <browset>JPEG</browset>
+    </browse>
+    <datacred>Acknowledgement of the originating agencies would be appreciated in products derived from these data.</datacred>
+  </idinfo>
+  <dataqual>
+    <logic>Please refer to the copy of the original product metadata file within the delivered folder if one was provided.</logic>
+    <complete>Data set is considered complete for the information presented, as described in the abstract. Users are advised to read the rest of the metadata record carefully for additional details.</complete>
+    <posacc>
+      <vertacc>
+        <vertaccr>Please refer to the copy of the original product metadata file if one was provided.</vertaccr>
+      </vertacc>
+    </posacc>
+    <lineage>
+      <procstep>
+        <procdesc>Original project data were provided to the National Geospatial Technical Operations Center (NGTOC) in Rolla, MO and/or Denver, CO. The data were reviewed for quality and accuracy before publication. Data are provided in the original source resolution and spatial reference.</procdesc>
+        <procdate>20181025</procdate>
+      </procstep>
+    </lineage>
+  </dataqual>
+  <spdoinfo>
+    <direct>Raster</direct>
+    <rastinfo>
+      <rasttype>Pixel</rasttype>
+      <rowcount>1500</rowcount>
+      <colcount>1500</colcount>
+      <vrtcount>1</vrtcount>
+    </rastinfo>
+  </spdoinfo>
+  <spref>
+    <horizsys>
+      <planar>
+        <gridsys>
+          <gridsysn>State Plane Coordinate System 1983</gridsysn>
+          <spcs>
+            <spcszone>5200</spcszone>
+            <lambertc>
+              <stdparll>18.0333333333333</stdparll>
+              <stdparll>18.4333333333333</stdparll>
+              <longcm>-66.4333333333333</longcm>
+              <latprjo>17.8333333333333</latprjo>
+              <feast>200000</feast>
+              <fnorth>200000</fnorth>
+            </lambertc>
+          </spcs>
+        </gridsys>
+        <planci>
+          <plance>row and column</plance>
+          <coordrep>
+            <absres>0.00000000848696668498406</absres>
+            <ordres>0.00000000848696668498406</ordres>
+          </coordrep>
+          <plandu>meters</plandu>
+        </planci>
+      </planar>
+      <geodetic>
+        <horizdn>GCS NAD 1983 2011</horizdn>
+        <ellips>GRS 1980</ellips>
+        <semiaxis>6378137</semiaxis>
+        <denflat>298.2572221009999052990208776</denflat>
+      </geodetic>
+    </horizsys>
+    <vertdef>
+      <altsys>
+        <altdatum>PRVD02_height</altdatum>
+        <altres>0.0001</altres>
+        <altunits>meters</altunits>
+        <altenc>Attribute values</altenc>
+      </altsys>
+    </vertdef>
+  </spref>
+  <eainfo>
+    <overview>
+      <eaover>The attribute summary can be found in the Data Dictionary (http://nationalmap.gov/3DEP/3dep_prodmetadata.html).</eaover>
+      <eadetcit>A link to the 3DEP Data Dictionary describing information that is included in the spatial metadata shapefiles acquired with the DEM is provided at the end of the Metadata Information section of this document.</eadetcit>
+    </overview>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>USGS National Geospatial Program Office</address>
+          <address>12201 Sunrise Valley Drive</address>
+          <city>Reston</city>
+          <state>VA</state>
+          <postal>20192</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM Eastern Time Zone USA</hours>
+        <cntinst>Please visit http://www.usgs.gov/ask/ to contact us.</cntinst>
+      </cntinfo>
+    </distrib>
+    <resdesc>Downloadable Data</resdesc>
+    <distliab>Although these data have been processed successfully on a computer system at the U.S. Geological Survey, no warranty, expressed or implied, is made by either regarding the utility of the data on any system, nor shall the act of distribution constitute any such warranty. The USGS will warranty the delivery of this product in computer-readable format and will offer appropriate adjustment of credit when the product is determined unreadable by correctly adjusted computer peripherals, or when the physical medium is delivered in damaged condition. Requests for adjustments of credit must be made within 90 days from the date of this shipment from the ordering site.</distliab>
+    <stdorder>
+      <digform>
+        <digtinfo>
+          <formname>varies</formname>
+          <transize>000.000000</transize>
+        </digtinfo>
+        <digtopt>
+          <onlinopt>
+            <computer>
+              <networka>
+                <networkr>ftp://rockyftp.cr.usgs.gov/vdelivery/Datasets/Staged/Elevation/OPR/PR_PuertoRico_2015/USGS_NED_OPR_PR_PuertoRico_2015_19QHV40502100_IMG_2018.zip</networkr>
+              </networka>
+            </computer>
+          </onlinopt>
+        </digtopt>
+      </digform>
+      <fees>None. No fees are applicable for obtaining the data set.</fees>
+    </stdorder>
+  </distinfo>
+  <metainfo>
+    <metd>20181025</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>USGS National Geospatial Program Office</address>
+          <address>12201 Sunrise Valley Drive</address>
+          <city>Reston</city>
+          <state>VA</state>
+          <postal>20192</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM Eastern Time Zone USA</hours>
+        <cntinst>Please visit http://www.usgs.gov/ask/ to contact us.</cntinst>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <metextns>
+      <onlink>http://nationalmap.gov/3DEP/3dep_prodmetadata.html</onlink>
+      <metprof>3D Elevation Program (3DEP) Metadata</metprof>
+    </metextns>
+  </metainfo>
+</metadata>
