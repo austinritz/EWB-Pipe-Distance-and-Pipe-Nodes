@@ -32,6 +32,7 @@ struct track_data{
   double lat;
   double longi;
   double elev;
+
 };
 
 struct track_distance{
@@ -80,7 +81,7 @@ void read_record(vector<track_data> &data){
     cout << "how many entries: " << vectorcount << endl;
 }
 
-void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif){
+void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif, int reduction){
   //isNode will itterate through the data vector and find points of interest based on the difference in bearings from points x->x+1 vs x+1->x+2
   //currently we have no way of telling what is a node and what is not. Therefor, we have no real way of telling if the number we are outputting is anywhere near correct
   //Because of this, we are forced to guess what constitutes a turn/junction in the pipes
@@ -88,22 +89,24 @@ void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif){
   //the function takes a vector filled with the points from final_tracks and uses them to populate a new empty vector called nodes.
   //the nodes vector is also made of gps points like data, but it is occupied solely by suspected turn in the pipes
 
-  for (int i = 0; i < data.size(); i++){
-    //first check to see if the consecutive points all belong to the same set of gps data, which is organized by name
+  for (int i = 0; i < 20; i++){
+    int one = i*reduction;
+    int two = (i+1)*reduction;
+    int three = (i+2)*reduction;
     if (data[i].name == data[i+1].name && data[i+1].name == data[i+2].name){
       //note: lat2/lon2 is used for the bearing found between data[i] and data[i+1] as well as data[i+1] and data[i+2]
       //i decided to just assign the variables for the 2 calculations all together, but i seperated the 2 calculations
-      float lat = data[i].lat;
-      float lat2 = data[i+1].lat;
-      float lat3 = data[i+2].lat;
-      float lon = data[i].longi;
-      float lon2 = data[i+1].longi;
-      float lon3 = data[i+2].longi;
+      float lat = data[one].lat;
+      float lat2 = data[two].lat;
+      float lat3 = data[three].lat;
+      float lon = data[one].longi;
+      float lon2 = data[two].longi;
+      float lon3 = data[three].longi;
       float teta1 = radians(lat);
       float teta2 = radians(lat2);
       float teta3 = radians(lat3);
-      float delta = radians(lon2-lon);
-      float delta2 = radians(lon3-lon2);
+      float delta = radians((lon2-lon));
+      float delta2 = radians((lon3-lon2));
       //finds brng for data[i] and data[i+1]
       float y = sin(delta) * cos(teta2);
       float x = cos(teta1)*sin(teta2) - sin(teta1)*cos(teta2)*cos(delta);
@@ -116,12 +119,13 @@ void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif){
       float brng2 = atan2(y2,x2);
       brng2 = degrees(brng2);
       float brngdif;
-
+      cout << "Bearing 1: " << brng <<endl;
+      //cout << "Bearing 2: " << brng2 << endl;
       //
       if (abs(brng2-brng) > 180) brngdif = 360.0 - abs(brng2-brng);//accounts for cases when brngdif is above 180, We want all values to be below 180.
       else brngdif = abs(brng2-brng);
 //if the change in bearing is greater than the one we decided, it adds the middle node to the potential node vecotre
-      if (brngdif >= maxDif) nodes.push_back(data[i+1]);
+      if (brngdif >= maxDif) nodes.push_back(data[two]);
     }
   }
 }
@@ -181,27 +185,38 @@ int count_tracks(vector<track_data> &data){
 int main (){
   vector<track_data> data;
   vector<track_distance> distances;
-  vector<track_data> nodes10d;
   vector<track_data> nodes20d;
   vector<track_data> nodes30d;
+  vector<track_data> nodes20d_2;
+  vector<track_data> nodes30d_2;
+  vector<track_data> nodes20d_4;
+  vector<track_data> nodes30d_4;
+  vector<track_data> nodes20d_8;
+  vector<track_data> nodes30d_8;
   read_record(data);
-  cout.precision(20);
-  int count = count_tracks(data);
-  cout <<"Total Data Points: " << data.size() << endl;
-  // isNode(data, nodes20d, 20.0);
-  // cout << "potential nodes found (20 degree dif): " << nodes20d.size() << endl;
-  // for (int i = 0; i < nodes20d.size(); i++){
-  //   cout << "Node #: " << i << " for GTRF. Point#: " << nodes20d[i].index << endl;
-  // }
-  // isNode(data, nodes30d, 30.0);
-  // cout << "potential nodes found (30 degree dif): " << nodes30d.size() << endl;
-  // for (int i = 0; i < nodes30d.size(); i++){
-  //   cout << "Node #: " << i << " for GTRF. Point#: " << nodes30d[i].index << endl;
-  // }
+  //cout.precision(20);
+  //int count = count_tracks(data);
+  cout <<"Total Data Points: " << data.size() << endl ;
+  isNode(data, nodes20d, 20.0, 1);
+  cout << "\npotential nodes found (20 degree dif), red factor none: " << nodes20d.size() << endl;
+  // isNode(data, nodes30d, 30.0, 1);
+  // cout << "\npotential nodes found (30 degree dif), red factor none: " << nodes30d.size() << endl;
+  // isNode(data, nodes20d_2, 20.0, 2);
+  // cout << "\npotential nodes found (20 degree dif), red factor 2: " << nodes20d_2.size() << endl;
+  // isNode(data, nodes30d_2, 30.0, 2);
+  // cout << "\npotential nodes found (30 degree dif), red factor 2: " << nodes30d_2.size() << endl;
+  // isNode(data, nodes20d_4, 20.0, 4);
+  // cout << "\npotential nodes found (20 degree dif), red factor 4: " << nodes20d_4.size() << endl;
+  // isNode(data, nodes30d_4, 30.0, 4);
+  // cout << "\npotential nodes found (30 degree dif), red factor 4: " << nodes30d_4.size() << endl ;
+  // isNode(data, nodes20d_8, 20.0, 8);
+  // cout << "\npotential nodes found (20 degree dif), red factor 8: " << nodes20d_8.size() << endl;
+  // isNode(data, nodes30d_8, 30.0, 8);
+  // cout << "\npotential nodes found (30 degree dif), red factor 8: " << nodes30d_8.size() << endl << endl;
   getDistance(data, distances);
   int countDist = distances.size();
   cout << setprecision(2) << fixed;
-  cout << "Total Data Points for Distance: " << countDist << endl;
+  //cout << "\nTotal Data Points for Distance: " << countDist << endl << endl;
   for (int i = 0; i < countDist; i++){
     cout << "Total Distance for section '" << distances[i].name << "': " << distances[i].totalDist << " meters" << endl;
   }
