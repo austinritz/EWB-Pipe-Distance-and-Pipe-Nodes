@@ -32,6 +32,7 @@ struct track_data{
   double lat;
   double longi;
   double elev;
+  double dist;
 
 };
 
@@ -74,6 +75,7 @@ void read_record(vector<track_data> &data){
           data[vectorcount].lat = stod(row[1]);
           data[vectorcount].longi = stod(row[2]);
           data[vectorcount].elev = stod(row[5]);
+          data[vectorcount].dist = 0;
           vectorcount++;
         }
         count ++;
@@ -88,12 +90,12 @@ void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif, i
 
   //the function takes a vector filled with the points from final_tracks and uses them to populate a new empty vector called nodes.
   //the nodes vector is also made of gps points like data, but it is occupied solely by suspected turn in the pipes
-
-  for (int i = 0; i < 20; i++){
+  nodes.push_back(data[0]);
+  for (int i = 0; i < data.size()/reduction; i++){
     int one = i*reduction;
     int two = (i+1)*reduction;
     int three = (i+2)*reduction;
-    if (data[i].name == data[i+1].name && data[i+1].name == data[i+2].name){
+    if (data[one].name == data[two].name && data[i+1].name == data[three].name){
       //note: lat2/lon2 is used for the bearing found between data[i] and data[i+1] as well as data[i+1] and data[i+2]
       //i decided to just assign the variables for the 2 calculations all together, but i seperated the 2 calculations
       float lat = data[one].lat;
@@ -119,13 +121,19 @@ void isNode(vector<track_data> &data, vector<track_data> &nodes, float maxDif, i
       float brng2 = atan2(y2,x2);
       brng2 = degrees(brng2);
       float brngdif;
-      cout << "Bearing 1: " << brng <<endl;
       //cout << "Bearing 2: " << brng2 << endl;
       //
       if (abs(brng2-brng) > 180) brngdif = 360.0 - abs(brng2-brng);//accounts for cases when brngdif is above 180, We want all values to be below 180.
       else brngdif = abs(brng2-brng);
 //if the change in bearing is greater than the one we decided, it adds the middle node to the potential node vecotre
-      if (brngdif >= maxDif) nodes.push_back(data[two]);
+      if (brngdif >= maxDif) {
+        nodes.push_back(data[two]);
+      }
+      //now check to see if the next itteration will be the same track, if it changes track then we need to push the last node in the path, and the first in the next path
+      if (data[three+1].name != data[three].name){
+        nodes.push_back(data[three]);
+        nodes.push_back(data[three+1]);
+      }
     }
   }
 }
@@ -153,7 +161,8 @@ void getDistance(vector<track_data> &data, vector<track_distance> &distances){
 
       float a = sin(dLat/2.0) * sin(dLat/2.0) + cos(lat) * cos(lat2) * sin(dLon/2.0) * sin(dLon/2.0);
       float b = 2.0*atan2(sqrt(a), sqrt(1.0-a));
-      temp.totalDist += b*6371000.0;
+      data[i].dist = sqrt(pow((b*6371000.0),2) + pow((data[i].elev-data[i-1].elev),2));
+      temp.totalDist += sqrt(pow((b*6371000.0),2) + pow((data[i].elev-data[i-1].elev),2));
     }
     else{
       //when the previous point does not match the current point, we will say that path is finished and we can push the point into distances vector
@@ -182,23 +191,42 @@ int count_tracks(vector<track_data> &data){
   return count;
 }
 
+void pushData(vector<track_data> &data, string filename){
+  ofstream myfile;
+
+    myfile << fixed << setprecision(10) << endl;
+  myfile.open(filename);
+  int vsize = data.size();
+  //cout << "before push" << endl;
+  myfile << "Index,Track Name,Latitude,Longitude,Elevation,MetersfromLastNode" << endl;
+  for (int n=0; n<vsize; n++)
+  {
+    myfile << data[n].index << ",";
+    myfile << data[n].name << ",";
+    myfile << data[n].lat << ",";
+    myfile << data[n].longi << ",";
+    myfile << data[n].elev << ",";
+    myfile << data[n].dist << endl;
+  }
+}
+
 int main (){
   vector<track_data> data;
-  vector<track_distance> distances;
-  vector<track_data> nodes20d;
-  vector<track_data> nodes30d;
-  vector<track_data> nodes20d_2;
-  vector<track_data> nodes30d_2;
-  vector<track_data> nodes20d_4;
-  vector<track_data> nodes30d_4;
-  vector<track_data> nodes20d_8;
-  vector<track_data> nodes30d_8;
+  vector<track_data> nodes25d;
+  vector<track_data> nodes45d;
+  vector<track_data> nodes90d;
+  vector<track_distance> distancesBase;
+  vector<track_distance> distances25d;
+  vector<track_distance> distances45d;
+  vector<track_distance> distances90d;
   read_record(data);
-  //cout.precision(20);
-  //int count = count_tracks(data);
   cout <<"Total Data Points: " << data.size() << endl ;
-  isNode(data, nodes20d, 20.0, 1);
-  cout << "\npotential nodes found (20 degree dif), red factor none: " << nodes20d.size() << endl;
+  isNode(data, nodes25d, 25.0, 1);
+  isNode(data, nodes45d, 45.0, 1);
+  isNode(data, nodes90d, 90.0, 1);
+  cout << "\npotential nodes found (25 degree dif), red factor none: " << nodes25d.size() << endl;
+  cout << "\npotential nodes found (45 degree dif), red factor none: " << nodes45d.size() << endl;
+  cout << "\npotential nodes found (90 degree dif), red factor none: " << nodes90d.size() << endl;
   // isNode(data, nodes30d, 30.0, 1);
   // cout << "\npotential nodes found (30 degree dif), red factor none: " << nodes30d.size() << endl;
   // isNode(data, nodes20d_2, 20.0, 2);
@@ -213,12 +241,23 @@ int main (){
   // cout << "\npotential nodes found (20 degree dif), red factor 8: " << nodes20d_8.size() << endl;
   // isNode(data, nodes30d_8, 30.0, 8);
   // cout << "\npotential nodes found (30 degree dif), red factor 8: " << nodes30d_8.size() << endl << endl;
-  getDistance(data, distances);
-  int countDist = distances.size();
-  cout << setprecision(2) << fixed;
-  //cout << "\nTotal Data Points for Distance: " << countDist << endl << endl;
+  getDistance(data, distancesBase);
+  getDistance(nodes25d, distances25d);
+  getDistance(nodes45d, distances45d);
+  getDistance(nodes90d, distances90d);
+  int countDist = count_tracks(data);
+  cout << "\nTotal Data Points for Distance: " << countDist << endl << endl;
   for (int i = 0; i < countDist; i++){
-    cout << "Total Distance for section '" << distances[i].name << "': " << distances[i].totalDist << " meters" << endl;
+    cout << "Total Distance for section '" << distancesBase[i].name << "': " << distancesBase[i].totalDist << " meters" << endl;
+    cout << "Total Distance25d for section '" << distances25d[i].name << "': " << distances25d[i].totalDist << " meters\n" << endl;
+    cout << "Total Distance45d for section '" << distances45d[i].name << "': " << distances45d[i].totalDist << " meters\n" << endl;
+    cout << "Total Distance90d for section '" << distances45d[i].name << "': " << distances90d[i].totalDist << " meters\n" << endl;
   }
+  pushData(data, "noNodes");
+  pushData(nodes25d, "25dNodes");
+  pushData(nodes45d, "45dNodes");
+  pushData(nodes90d, "90dNodes");
+
   return 0;
 }
+//i need a csv file with all potential nodes, with the distance from the previous node
